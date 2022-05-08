@@ -225,44 +225,110 @@ func Test_squareSizeCounterBoard(t *testing.T) {
 func Test_chessChecker_CheckTopFirst(t *testing.T) {
 	assert := assert.New(t)
 
-	board := [][]int{
-		{1, 0, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1},
+	{
+		board := [][]int{
+			{1, 0, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+		}
+
+		checker := chessChecker{}
+
+		assert.True(checker.CheckTopFirst(board, position{i: 2, j: 2}, 3))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
+
+		assert.True(checker.CheckTopFirst(board, position{i: 2, j: 3}, 3))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
+
+		assert.False(checker.CheckTopFirst(board, position{i: 2, j: 4}, 3))
 	}
+	{
+		board := [][]int{
+			{0, 0, 1, 1, 1},
+			{0, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+		}
 
-	checker := chessChecker{}
+		checker := chessChecker{}
 
-	assert.True(checker.CheckTopFirst(board, position{i: 2, j: 2}, 3))
-	assert.Equal(&position{i: 0, j: 1}, checker.cache)
+		assert.True(checker.CheckTopFirst(board, position{i: 1, j: 1}, 2))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
 
-	assert.True(checker.CheckTopFirst(board, position{i: 2, j: 3}, 3))
-	assert.Equal(&position{i: 0, j: 1}, checker.cache)
+		assert.True(checker.CheckTopFirst(board, position{i: 1, j: 2}, 2))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
 
-	assert.False(checker.CheckTopFirst(board, position{i: 2, j: 4}, 3))
+		assert.False(checker.CheckTopFirst(board, position{i: 1, j: 3}, 2))
+	}
 }
 
 func Test_chessChecker_CheckLeftFirst(t *testing.T) {
 	assert := assert.New(t)
 
-	board := [][]int{
-		{1, 0, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1},
-		{0, 1, 1, 1, 1},
+	{
+		board := [][]int{
+			{1, 0, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1},
+			{0, 1, 1, 1, 1},
+		}
+
+		checker := chessChecker{}
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 2, j: 2}, 3))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
+
+		assert.False(checker.CheckLeftFirst(board, position{i: 3, j: 2}, 3))
+		assert.Equal(&position{i: 0, j: 1}, checker.cache)
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 4, j: 2}, 3))
+		assert.Equal(&position{i: 4, j: 0}, checker.cache)
 	}
+	{
+		board := [][]int{
+			{1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
+			{1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+			{0, 0, 1, 0, 1, 1, 1, 1, 1, 1},
+			{0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 0, 1, 1, 1, 0, 1},
+			{1, 1, 0, 1, 1, 0, 1, 1, 1, 0},
+			{0, 1, 1, 1, 1, 0, 1, 1, 1, 1},
+			{0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+			{1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
+		}
 
-	checker := chessChecker{}
+		checker := chessChecker{}
 
-	assert.True(checker.CheckLeftFirst(board, position{i: 2, j: 2}, 3))
-	assert.Equal(&position{i: 0, j: 1}, checker.cache)
+		assert.False(checker.CheckLeftFirst(board, position{i: 1, j: 1}, 2))
+		assert.Nil(checker.cache)
 
-	assert.False(checker.CheckLeftFirst(board, position{i: 3, j: 2}, 3))
-	assert.Equal(&position{i: 0, j: 1}, checker.cache)
+		assert.True(checker.CheckLeftFirst(board, position{i: 2, j: 1}, 2))
+		assert.Equal(&position{i: 2, j: 1}, checker.cache)
 
-	assert.True(checker.CheckLeftFirst(board, position{i: 4, j: 2}, 3))
-	assert.Equal(&position{i: 4, j: 0}, checker.cache)
+		assert.True(checker.CheckLeftFirst(board, position{i: 3, j: 1}, 2))
+		assert.Equal(&position{i: 3, j: 0}, checker.cache)
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 4, j: 1}, 2))
+		assert.Equal(&position{i: 3, j: 0}, checker.cache)
+
+		assert.False(checker.CheckLeftFirst(board, position{i: 5, j: 1}, 2))
+		assert.Equal(&position{i: 3, j: 0}, checker.cache)
+
+		assert.False(checker.CheckLeftFirst(board, position{i: 6, j: 1}, 2))
+		assert.Equal(&position{i: 3, j: 0}, checker.cache)
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 7, j: 1}, 2))
+		assert.Equal(&position{i: 7, j: 0}, checker.cache)
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 8, j: 1}, 2))
+		assert.Equal(&position{i: 8, j: 0}, checker.cache)
+
+		assert.True(checker.CheckLeftFirst(board, position{i: 9, j: 1}, 2))
+		assert.Equal(&position{i: 8, j: 0}, checker.cache)
+	}
 }

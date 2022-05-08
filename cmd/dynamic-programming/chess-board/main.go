@@ -130,16 +130,6 @@ func (checker *chessChecker) CheckTopFirst(board [][]int, start position, checkR
 	iEnd := start.i - checkRange + 1
 	jEnd := start.j - checkRange + 1
 
-	hasCache := false
-	if checker.cache != nil {
-		hasCache = true
-
-		if iEnd <= checker.cache.i &&
-			jEnd <= checker.cache.j {
-			return true
-		}
-	}
-
 	for i := start.i; i >= iEnd; i-- {
 		if hasChess(board[i][start.j]) {
 			if checker.cache == nil {
@@ -153,8 +143,8 @@ func (checker *chessChecker) CheckTopFirst(board [][]int, start position, checkR
 		}
 	}
 
-	if hasCache {
-		return false
+	if checker.cache != nil {
+		return iEnd <= checker.cache.i && jEnd <= checker.cache.j
 	}
 
 	for j := start.j - 1; j >= jEnd; j-- {
@@ -178,16 +168,6 @@ func (checker *chessChecker) CheckLeftFirst(board [][]int, start position, check
 	iEnd := start.i - checkRange + 1
 	jEnd := start.j - checkRange + 1
 
-	hasCache := false
-	if checker.cache != nil {
-		hasCache = true
-
-		if iEnd <= checker.cache.i &&
-			jEnd <= checker.cache.j {
-			return true
-		}
-	}
-
 	for j := start.j; j >= jEnd; j-- {
 		if hasChess(board[start.i][j]) {
 			if checker.cache == nil {
@@ -201,8 +181,8 @@ func (checker *chessChecker) CheckLeftFirst(board [][]int, start position, check
 		}
 	}
 
-	if hasCache {
-		return false
+	if checker.cache != nil {
+		return iEnd <= checker.cache.i && jEnd <= checker.cache.j
 	}
 
 	for i := start.i - 1; i >= iEnd; i-- {
