@@ -8,7 +8,7 @@ func ChessBoard(board [][]int) map[int]int {
 		cBoard.init(board, squareSize)
 
 		for i := squareSize - 1; i < len(cBoard); i++ {
-			checker := newChessChecker(board, squareSize, i-squareSize+2)
+			checker := newChessChecker(board, squareSize, i-squareSize+2, false)
 			for j := squareSize - 1; j < len(cBoard[i]); j++ {
 				num := cBoard.Top(j, i, squareSize) + cBoard.Left(j, i, squareSize) - cBoard.TopLeft(j, i, squareSize)
 				if !checker.CheckTopFirst(board, position{i: i + 1, j: j + 1}, squareSize) {
@@ -48,7 +48,7 @@ func (board *squareSizeCounterBoard) init(chessBoard [][]int, squareSize int) {
 	boardStart := squareSize - 2
 
 	// init row
-	checker := newChessChecker(chessBoard, squareSize, 0)
+	checker := newChessChecker(chessBoard, squareSize, 0, true)
 	for x := chessBoardStart; x < len(chessBoard[chessBoardStart]); x++ {
 		if x == chessBoardStart {
 			if !checker.CheckTopFirst(chessBoard, position{i: chessBoardStart, j: chessBoardStart}, squareSize) {
@@ -112,7 +112,7 @@ type chessChecker struct {
 	leftCache *position
 }
 
-func newChessChecker(board [][]int, checkRange, iShift int) *chessChecker {
+func newChessChecker(board [][]int, checkRange, iShift int, genLeft bool) *chessChecker {
 	start := checkRange - 1
 
 	checker := chessChecker{}
@@ -131,16 +131,18 @@ topFirst:
 		}
 	}
 
-	// left first
-leftFirst:
-	for i := start + iShift; i >= iShift; i-- {
-		for j := start; j >= 0; j-- {
-			if hasChess(board[i][j]) {
-				checker.leftCache = &position{
-					i: i,
-					j: j,
+	if genLeft {
+		// left first
+	leftFirst:
+		for i := start + iShift; i >= iShift; i-- {
+			for j := start; j >= 0; j-- {
+				if hasChess(board[i][j]) {
+					checker.leftCache = &position{
+						i: i,
+						j: j,
+					}
+					break leftFirst
 				}
-				break leftFirst
 			}
 		}
 	}

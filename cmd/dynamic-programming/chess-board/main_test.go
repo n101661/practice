@@ -234,7 +234,7 @@ func Test_chessChecker_CheckTopFirst(t *testing.T) {
 			{1, 1, 1, 1, 1},
 		}
 
-		checker := newChessChecker(board, 3, 0)
+		checker := newChessChecker(board, 3, 0, false)
 		assert.Equal(&position{i: 0, j: 1}, checker.topCache)
 
 		assert.True(checker.CheckTopFirst(board, position{i: 2, j: 2}, 3))
@@ -255,7 +255,7 @@ func Test_chessChecker_CheckTopFirst(t *testing.T) {
 			{1, 1, 1, 1, 1},
 		}
 
-		checker := newChessChecker(board, 2, 0)
+		checker := newChessChecker(board, 2, 0, false)
 		assert.Equal(&position{i: 0, j: 1}, checker.topCache)
 
 		assert.True(checker.CheckTopFirst(board, position{i: 1, j: 1}, 2))
@@ -281,7 +281,7 @@ func Test_chessChecker_CheckLeftFirst(t *testing.T) {
 			{0, 1, 1, 1, 1},
 		}
 
-		checker := newChessChecker(board, 3, 0)
+		checker := newChessChecker(board, 3, 0, true)
 		assert.Equal(&position{i: 0, j: 1}, checker.leftCache)
 
 		assert.True(checker.CheckLeftFirst(board, position{i: 2, j: 2}, 3))
@@ -307,7 +307,7 @@ func Test_chessChecker_CheckLeftFirst(t *testing.T) {
 			{1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
 		}
 
-		checker := newChessChecker(board, 2, 0)
+		checker := newChessChecker(board, 2, 0, true)
 		assert.Nil(checker.leftCache)
 
 		assert.False(checker.CheckLeftFirst(board, position{i: 1, j: 1}, 2))
